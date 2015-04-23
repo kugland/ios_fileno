@@ -297,8 +297,9 @@ We've had the discussion whether to include a <code>filebuf::fd()</code> member 
 
 I'll try to keep this article up to date while recording noteworthy changes in this Changelog. There'll also be links to older versions of the code.
 
-2005-02-13 First public version. Tested on all released versions of GCC 3.x on a variety of platforms. Also works with the Intel compiler, if GCC's libstdc++ is used.
-2005-02-18 After ranting on the <libstdc++ at gcc dot gnu dot org> mailing list, I've received a lot of positive feedback. However, it was pointed out that <code>fileno(3)</code> is a macro on some platforms. There, my implementation does not work without some renaming. Minor changes: Jonathan Wakely suggested wrapping the wios-instantiation in #ifdefs and a minor simplification for the GCC-3.4.x filestream case. Also, following a suggestion by Joe Buck, I put the code in the public domain.
+* 2005-02-13 First public version. Tested on all released versions of GCC 3.x on a variety of platforms. Also works with the Intel compiler, if GCC's libstdc++ is used.
+
+* 2005-02-18 After ranting on the <libstdc++ at gcc dot gnu dot org> mailing list, I've received a lot of positive feedback. However, it was pointed out that <code>fileno(3)</code> is a macro on some platforms. There, my implementation does not work without some renaming. Minor changes: Jonathan Wakely suggested wrapping the wios-instantiation in #ifdefs and a minor simplification for the GCC-3.4.x filestream case. Also, following a suggestion by Joe Buck, I put the code in the public domain.
 Acknowledgments
 
 The animal pictures in this article are taken from Project Gutenberg's EText-No. 11921, The Illustrated London Reading Book. I'ld like to thank Gromit for keeping up my spirit. Lately, Wallace has been quite a nuisance, though. Thanks to Christian Bauer and Bruno Haible for providing valuable criticism, encouragement and suggestions. Also, the Tiergarten Nürnberg and the Biergarten at Atzelsberg have been more than helpful by providing an inspiring backdrop.  ;-)
