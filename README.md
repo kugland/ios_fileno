@@ -24,11 +24,12 @@ funbox:~$ last |more |wc
 320
 ```
 
-Wait! Shouldn't the <code>more(1)</code> command in the last line have done something funny with the terminal? And introduced lines saying --More-- awaiting a keystroke from the user? What happened to it? Or, now that we seem to be onto something: What happens when you pipe the output of <code>more(1)</code> into <code>less(1)</code>, and that into <code>more(1)</code> again? Try it! Oh, and what happens to the formatting when you just redirect the output of <code>less(1)</code> to a file?
+Wait! Shouldn't the <code>more(1)</code> command in the last line have done something funny with the terminal? And introduced lines saying ***--More--*** awaiting a keystroke from the user? What happened to it? Or, now that we seem to be onto something: What happens when you pipe the output of <code>more(1)</code> into <code>less(1)</code>, and that into <code>more(1)</code> again? Try it! Oh, and what happens to the formatting when you just redirect the output of <code>less(1)</code> to a file?
 
 Perplexed? The secret is that all these little Unix utilities have a way of knowing whether they are writing/reading to/from a terminal or to/from something else and they adjust their behavior accordingly. It turns out there is a C library function <code>isatty(3)</code> which tests whether its argument, an open file descriptor, is associated with a terminal device. And yes, this also works with input streams like 0, the file descriptor associated with input from the command line by default. After all, the user experience of a shell script piping canned input into a program is vastly different from the user experience of a human typing at the same program. To sum up:
 
-Programs with a well-written command line interface discriminate among their audience.
+***Programs with a well-written command line interface discriminate among their audience.***
+
 Imagine how confusing it would be if you couldn't just count the number of items in a directory with <code>ls |wc</code>. You would always have to say <code>ls -l |wc</code>. And you would probably forget it from time to time. Most people I've asked take the behavior in the first example above as granted and haven't ever even thought about why it actually works! Not all programs get it right, though. Here is an example what happens when an interpreter does not discriminate among its audience. Oracle's lame SQLplus is an interpreter which unconditionally emits annoying prompts (and other rubbish):
 
 ```
