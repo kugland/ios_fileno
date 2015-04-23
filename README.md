@@ -142,12 +142,12 @@ The implementation has to hide away all the compiler-dependent intricacies. It t
 # include <ext/stdio_sync_filebuf.h>
 #endif
 
-//! Similar to <code>fileno(3)</code>, but taking a C++ stream as argument instead of a
-//! FILE\*.  Note that there is no way for the library to track what you do with
+//! Similar to fileno(3), but taking a C++ stream as argument instead of a
+//! FILE*.  Note that there is no way for the library to track what you do with
 //! the descriptor, so be careful.
 //! \return  The integer file descriptor associated with the stream, or -1 if
 //!   that stream is invalid.  In the latter case, for the sake of keeping the
-//!   code as similar to <code>fileno(3)</code>, errno is set to EBADF.
+//!   code as similar to fileno(3), errno is set to EBADF.
 //! \see  The <A HREF="http://www.ginac.de/~kreckel/fileno/">upstream page at
 //!   http://www.ginac.de/~kreckel/fileno/</A> of this code provides more
 //!   detailed information.
@@ -178,7 +178,7 @@ fileno_hack(const std::basic_ios<charT, traits>& stream)
     typedef std::basic_filebuf<charT, traits> filebuf_t;
     filebuf_t* bbuf = dynamic_cast<filebuf_t*>(stream.rdbuf());
     if (bbuf != NULL) {
-        // This subclass is only there for accessing the FILE\*.  Ouuwww, sucks!
+        // This subclass is only there for accessing the FILE*.  Ouuwww, sucks!
         struct my_filebuf : public std::basic_filebuf<charT, traits> {
             int fd() { return this->_M_file.fd(); }
         };
@@ -190,15 +190,15 @@ fileno_hack(const std::basic_ios<charT, traits>& stream)
     sync_filebuf_t* sbuf = dynamic_cast<sync_filebuf_t*>(stream.rdbuf());
     if (sbuf != NULL) {
 #  if (__GLIBCXX__<20040906) // GCC < 3.4.2
-        // This subclass is only there for accessing the FILE\*.
+        // This subclass is only there for accessing the FILE*.
         // See GCC PR#14600 and PR#16411.
         struct my_filebuf : public sync_filebuf_t {
             my_filebuf();  // Dummy ctor keeps the compiler happy.
-            // Note: stdio_sync_filebuf has a FILE\* as its first (but private)
+            // Note: stdio_sync_filebuf has a FILE* as its first (but private)
             // member variable.  However, it is derived from basic_streambuf<>
-            // and the FILE\* is the first non-inherited member variable.
-            FILE\* c_file() {
-                return *(FILE\**)((char*)this + sizeof(std::basic_streambuf<charT, traits>));
+            // and the FILE* is the first non-inherited member variable.
+            FILE* c_file() {
+                return *(FILE*)((char*)this + sizeof(std::basic_streambuf<charT, traits>));
             }
         };
         return ::fileno(static_cast<my_filebuf*>(sbuf)->c_file());
@@ -219,13 +219,13 @@ fileno_hack(const std::basic_ios<charT, traits>& stream)
     typedef std::basic_filebuf<charT, traits> filebuf_t;
     filebuf_t* bbuf = dynamic_cast<filebuf_t*>(stream.rdbuf());
     if (bbuf != NULL) {
-        // This subclass is only there for accessing the FILE\*.  Ouuwww, sucks!
+        // This subclass is only there for accessing the FILE*.  Ouuwww, sucks!
         struct my_filebuf : public std::basic_filebuf<charT, traits> {
             // Note: _M_file is of type __basic_file<char> which has a
-            // FILE\* as its first (but private) member variable.
-            FILE\* c_file() { return *(FILE\**)(&this->_M_file); }
+            // FILE* as its first (but private) member variable.
+            FILE* c_file() { return *(FILE*)(&this->_M_file); }
         };
-        FILE\* c_file = static_cast<my_filebuf*>(bbuf)->c_file();
+        FILE* c_file = static_cast<my_filebuf*>(bbuf)->c_file();
         if (c_file != NULL) {  // Could be NULL for failed ifstreams.
             return ::fileno(c_file);
         }
@@ -238,16 +238,16 @@ fileno_hack(const std::basic_ios<charT, traits>& stream)
             // Note: basic_filebuf<charT, traits> has a __basic_file<charT>* as
             // its first (but private) member variable.  Since it is derived
             // from basic_streambuf<charT, traits> we can guess its offset.
-            // __basic_file<charT> in turn has a FILE\* as its first (but
+            // __basic_file<charT> in turn has a FILE* as its first (but
             // private) member variable.  Get it by brute force.  Oh, geez!
-            FILE\* c_file() {
+            FILE* c_file() {
                 std::__basic_file<charT>* ptr_M_file = *(std::__basic_file<charT>**)((char*)this + sizeof(std::basic_streambuf<charT, traits>));
 #  if _GLIBCPP_BASIC_FILE_INHERITANCE
                 // __basic_file<charT> inherits from __basic_file_base<charT>
-                return *(FILE\**)((char*)ptr_M_file + sizeof(std::__basic_file_base<charT>));
+                return *(FILE*)((char*)ptr_M_file + sizeof(std::__basic_file_base<charT>));
 #  else
                 // __basic_file<charT> is base class, but with vptr.
-                return *(FILE\**)((char*)ptr_M_file + sizeof(void*));
+                return *(FILE*)((char*)ptr_M_file + sizeof(void*));
 #  endif
             }
         };
